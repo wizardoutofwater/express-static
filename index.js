@@ -2,32 +2,41 @@ var express = require('express');
 
 var app = express();
 
-app.use(express.static(__dirname + '/public'));
+
 
 app.use(express.json());
+app.use(express.urlencoded({extended: false}));
+
+app.use(express.static(__dirname + '/public'));
 
 var count = 0;
 
 
 
-app.post ('/increment', function(request, response, next){
-    console.log('someone sent a POST request to increment');
+app.get ('/api/increment', function(req, res ){
+    console.log('someone sent a fetch request to increment');
     count++;
-    response.json(count);
+    res.json(count);
 });
 
-app.post ('/decrement', function(request, response, next){
-    console.log('someone sent a POST request to decrement');
+app.get ('/api/decrement', function(req, res ){
+    console.log('someone sent a fetch request to decrement');
     count--;
-    response.send('the count is now ' + count);
+    res.json(count);
 });
 
-app.get ('/value', function(request, response, next){
-    console.log('someone sent a request to value');
-    response.send("the count is " + count);
+app.get ('/api/counter', function(req, res ){
+    console.log('someone sent a request to counter');
+    res.json(count);
+});
+
+// reset counter
+app.delete('/api/counter', function(req, res){
+    console.log('someone sent a delete request to counter');
+    count = 0;
+    res.json(count);
 });
 
 app.listen(3000, function(){
-    console.log('listening in port 3000');
+    console.log('Counter API listening in port 3000');
 });
-    
